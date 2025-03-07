@@ -1,0 +1,7 @@
+captcha_ocr_model.keras
+
+venv/
+
+down_image.py
+
+collab.py
