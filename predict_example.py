@@ -41,20 +41,7 @@ class CTCLayer(layers.Layer):
 
 
 # Characters present in the dataset must be as same as the one used in training
-characters = sorted(
-    [
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9"
-    ]
-)
+characters = sorted(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
 
 # Mapping characters to integers
 char_to_num = layers.StringLookup(vocabulary=list(characters), mask_token=None)
@@ -116,6 +103,27 @@ def decode_prediction(pred):
 """
 ## Inference
 """
+
+import requests
+
+
+def download_file(url, filename="Show.png"):
+    try:
+        response = requests.get(url, stream=True)
+        response.raise_for_status()  # Check if the request was successful
+
+        with open(filename, "wb") as file:
+            for chunk in response.iter_content(chunk_size=8192):
+                file.write(chunk)
+
+        print(f"File downloaded successfully as {filename}")
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading file: {e}")
+
+
+# Example usage
+download_file("change_url_here")
+
 
 # Load and preprocess the image
 img_path = "Show.png"
