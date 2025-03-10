@@ -23,6 +23,7 @@ if not path.isfile(MODEL):
     # Download model file
     import requests
 
+    print("Missing model file. Downloading ...")
     try:
         response = requests.get(
             "https://github.com/nquangit/ocr-captchas/releases/download/model/captcha_ocr_model.keras",

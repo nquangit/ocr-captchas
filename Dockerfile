@@ -9,7 +9,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY . /app
 
-CMD [ "python3", "-m" , "flask", "run" ]
+CMD [ "python3", "-m" , "flask", "run", "--debug" ]
 
 FROM builder as dev-envs
 
