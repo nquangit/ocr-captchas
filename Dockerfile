@@ -16,7 +16,7 @@ FROM builder as dev-envs
 
 RUN <<EOF
 apt update
-apt install git
+apt install git -y
 EOF
 
 RUN <<EOF
