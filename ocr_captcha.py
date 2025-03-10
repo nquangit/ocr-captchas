@@ -13,7 +13,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from keras.saving import register_keras_serializable
 
-# Path of data directory 
+# Path of data directory
 data_dir = Path("./captcha_images/")
 
 # Get images
@@ -35,7 +35,6 @@ characters = sorted(
         "9",
     ]
 )
-
 
 
 print("Number of images found: ", len(images))
@@ -83,16 +82,13 @@ def split_data(images, labels, train_size=0.9, shuffle=True):
     # 3. Get the size of training samples
     train_samples = int(size * train_size)
     # 4. Split data into training and validation sets
-    x_train, y_train = images[indices[:train_samples]
-                              ], labels[indices[:train_samples]]
-    x_valid, y_valid = images[indices[train_samples:]
-                              ], labels[indices[train_samples:]]
+    x_train, y_train = images[indices[:train_samples]], labels[indices[:train_samples]]
+    x_valid, y_valid = images[indices[train_samples:]], labels[indices[train_samples:]]
     return x_train, x_valid, y_train, y_valid
 
 
 # Splitting data into training and validation sets
-x_train, x_valid, y_train, y_valid = split_data(
-    np.array(images), np.array(labels))
+x_train, x_valid, y_train, y_valid = split_data(np.array(images), np.array(labels))
 
 
 def encode_single_sample(img_path, label):
@@ -108,8 +104,7 @@ def encode_single_sample(img_path, label):
     # dimension to correspond to the width of the image.
     img = tf.transpose(img, perm=[1, 0, 2])
     # 6. Map the characters in label to numbers
-    label = char_to_num(tf.strings.unicode_split(
-        label, input_encoding="UTF-8"))
+    label = char_to_num(tf.strings.unicode_split(label, input_encoding="UTF-8"))
     # 7. Return a dict as our model is expecting two inputs
     return {"image": img, "label": label}
 
@@ -121,16 +116,14 @@ def encode_single_sample(img_path, label):
 
 train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
 train_dataset = (
-    train_dataset.map(encode_single_sample,
-                      num_parallel_calls=tf.data.AUTOTUNE)
+    train_dataset.map(encode_single_sample, num_parallel_calls=tf.data.AUTOTUNE)
     .batch(batch_size)
     .prefetch(buffer_size=tf.data.AUTOTUNE)
 )
 
 validation_dataset = tf.data.Dataset.from_tensor_slices((x_valid, y_valid))
 validation_dataset = (
-    validation_dataset.map(encode_single_sample,
-                           num_parallel_calls=tf.data.AUTOTUNE)
+    validation_dataset.map(encode_single_sample, num_parallel_calls=tf.data.AUTOTUNE)
     .batch(batch_size)
     .prefetch(buffer_size=tf.data.AUTOTUNE)
 )
@@ -146,8 +139,7 @@ for batch in train_dataset.take(1):
     labels = batch["label"]
     for i in range(16):
         img = (images[i] * 255).numpy().astype("uint8")
-        label = tf.strings.reduce_join(
-            num_to_char(labels[i])).numpy().decode("utf-8")
+        label = tf.strings.reduce_join(num_to_char(labels[i])).numpy().decode("utf-8")
         ax[i // 4, i % 4].imshow(img[:, :, 0].T, cmap="gray")
         ax[i // 4, i % 4].set_title(label)
         ax[i // 4, i % 4].axis("off")
@@ -270,8 +262,12 @@ history = model.fit(
     callbacks=[early_stopping],
 )
 
+
+# Check model folder
+if not os.path.isdir("model"):
+    os.makedirs("model")
 # Save the model
-model.save('model/captcha_ocr_model.keras')
+model.save("model/captcha_ocr_model.keras")
 
 """
 ## Inference
@@ -283,6 +279,7 @@ prediction_model = keras.models.Model(
     model.input[0], model.get_layer(name="dense2").output
 )
 prediction_model.summary()
+
 
 # A utility function to decode the output of the network
 def decode_batch_predictions(pred):
@@ -309,8 +306,7 @@ for batch in validation_dataset.take(1):
 
     orig_texts = []
     for label in batch_labels:
-        label = tf.strings.reduce_join(
-            num_to_char(label)).numpy().decode("utf-8")
+        label = tf.strings.reduce_join(num_to_char(label)).numpy().decode("utf-8")
         orig_texts.append(label)
 
     _, ax = plt.subplots(4, 4, figsize=(15, 5))

@@ -13,7 +13,7 @@ from sys import platform
 # For web
 import json
 from flask import Flask, request, jsonify
-from os import path
+from os import path, makedirs
 import io
 from PIL import Image
 import base64
@@ -23,6 +23,11 @@ app = Flask(__name__)
 
 # Check for model file
 MODEL = "model/captcha_ocr_model.keras"
+
+# Check model folder
+if not path.isdir("model"):
+    makedirs("model")
+
 if not path.isfile(MODEL):
     # Download model file
     import requests
