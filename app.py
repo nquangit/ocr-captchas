@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 
 # Check for model file
-MODEL = "captcha_ocr_model.keras"
+MODEL = "model/captcha_ocr_model.keras"
 if not path.isfile(MODEL):
     # Download model file
     import requests
