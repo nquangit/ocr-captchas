@@ -11,8 +11,12 @@ from keras.saving import register_keras_serializable
 from sys import platform
 
 # For web
-from flask import Flask, request
+import json
+from flask import Flask, request, jsonify
 from os import path
+import io
+from PIL import Image
+import base64
 
 app = Flask(__name__)
 
@@ -163,6 +167,43 @@ def get_otp():
     pred = prediction_model.predict(img)
     pred_text = decode_prediction(pred)
     return pred_text[0]
+
+
+@app.route("/json/otp", methods=["POST"])
+def get_json_otp():
+    data = request.get_json()
+    if "file" not in data:
+        return jsonify({"error": "No image provided"}), 400
+
+    image_b64_raw = data["file"]
+    if len(image_b64_raw.split(",")) > 1:
+        image_b64_raw = image_b64_raw.split(",")[-1]
+
+    try:
+        image_data = base64.b64decode(image_b64_raw)
+        image = Image.open(io.BytesIO(image_data))
+
+        if platform != "win32":
+            import magic
+
+            mime = magic.Magic(mime=True)
+            file_type = mime.from_buffer(image_data[:1024])
+            allowed_types = ["image/jpeg", "image/png"]
+            if file_type not in allowed_types:
+                return jsonify({"error": "Not allowed file type"}), 400
+
+        img_path = "Show.png"
+        image.save(img_path)
+        # Load and preprocess the image
+        img = preprocess_image(img_path)
+        # Make the prediction
+        pred = prediction_model.predict(img)
+        pred_text = decode_prediction(pred)
+
+        return jsonify({"otp": pred_text[0]})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
