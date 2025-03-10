@@ -271,7 +271,7 @@ history = model.fit(
 )
 
 # Save the model
-model.save('captcha_ocr_model.keras')
+model.save('model/captcha_ocr_model.keras')
 
 """
 ## Inference

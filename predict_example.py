@@ -54,7 +54,7 @@ num_to_char = layers.StringLookup(
 """
 ## Load the model
 """
-model = load_model("captcha_ocr_model.keras", compile=False)
+model = load_model("model/captcha_ocr_model.keras", compile=False)
 
 # for layer in model.layers:
 #     print(layer.name)

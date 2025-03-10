@@ -3,6 +3,6 @@ services:
         image: ghcr.io/nquangit/ocr-captchas:main
         stop_signal: SIGINT
         volumes:
-            - ./captcha_ocr_model.keras:/app/captcha_ocr_model.keras
+            - ./model:/app/model
         ports:
             - "13044:5000"
