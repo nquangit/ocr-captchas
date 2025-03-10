@@ -19,9 +19,9 @@ apt update
 apt install git -y
 EOF
 
-RUN <<EOF
-addgroup -S docker
-adduser -S --shell /bin/bash --ingroup docker vscode
-EOF
+# RUN <<EOF
+# addgroup -S docker
+# adduser -S --shell /bin/bash --ingroup docker vscode
+# EOF
 # install Docker tools (cli, buildx, compose)
 COPY --from=gloursdocker/docker / /
