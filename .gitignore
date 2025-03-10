@@ -7,3 +7,5 @@ down_image.py
 collab.py
 
 Show.png
+
+__pycache__/
