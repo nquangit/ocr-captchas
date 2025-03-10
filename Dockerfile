@@ -15,8 +15,8 @@ CMD ["web.py"]
 FROM builder as dev-envs
 
 RUN <<EOF
-apk update
-apk add git
+apt update
+apt install git
 EOF
 
 RUN <<EOF
