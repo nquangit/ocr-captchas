@@ -15,7 +15,7 @@ FROM builder as dev-envs
 
 RUN <<EOF
 apt update
-apt install git -y
+apt install git libmagic1 -y
 EOF
 
 # RUN <<EOF
